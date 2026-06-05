@@ -15,6 +15,14 @@ Route::get('/map', function () {
     return view('map');
 })->name('map');
 
+Route::get('/api/beaches', function () {
+    return \App\Models\Beach::all();
+});
+
+Route::get('/api/geo-features', [\App\Http\Controllers\GeoFeatureController::class, 'index']);
+Route::post('/api/geo-features', [\App\Http\Controllers\GeoFeatureController::class, 'store']);
+Route::delete('/api/geo-features/{geoFeature}', [\App\Http\Controllers\GeoFeatureController::class, 'destroy']);
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

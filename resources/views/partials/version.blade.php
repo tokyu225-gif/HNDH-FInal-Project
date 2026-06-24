@@ -1,1 +1,1 @@
-<span style="font-size:0.6875rem; background: var(--color-accent-soft); color: var(--color-accent-text); padding: 0.125rem 0.5rem; border-radius: 9999px; font-weight: 600; letter-spacing: 0.02em;">HNDH v0.2.0-beta</span>
+<span style="font-size:0.6875rem; background: var(--color-accent-soft); color: var(--color-accent-text); padding: 0.125rem 0.5rem; border-radius: 9999px; font-weight: 600; letter-spacing: 0.02em;">HNDH v1.0.0</span>

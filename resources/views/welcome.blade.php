@@ -8,120 +8,140 @@
     <script src="https://cdn.tailwindcss.com"></script>
     @include('partials.theme')
     <style>
-        #preview-map { height: 380px; width: 100%; border-radius: var(--radius-lg); border: 1px solid var(--color-border); }
+        /* ---- Map Preview ---- */
+        #preview-map { height: 360px; width: 100%; border-radius: var(--radius-lg); border: 1px solid var(--color-border); }
         .leaflet-control-zoom { margin-top: 12px !important; margin-left: 12px !important; }
-        .leaflet-control-zoom a {
-            background: var(--color-surface) !important;
-            border-color: var(--color-border) !important;
-            color: var(--color-text-secondary) !important;
-        }
-        .leaflet-control-zoom a:hover {
-            background: var(--color-surface-hover) !important;
-            color: var(--color-accent) !important;
-        }
-        .leaflet-control-attribution {
-            background: var(--color-surface) !important;
-            color: var(--color-text-muted) !important;
-            font-size: 0.6rem !important;
-            padding: 1px 5px !important;
-            border-radius: 3px !important;
-            border: 1px solid var(--color-border) !important;
-        }
+        .leaflet-control-zoom a { background: var(--color-surface) !important; border-color: var(--color-border) !important; color: var(--color-text-secondary) !important; }
+        .leaflet-control-zoom a:hover { background: var(--color-surface-hover) !important; color: var(--color-accent) !important; }
+        .leaflet-control-attribution { background: var(--color-surface) !important; color: var(--color-text-muted) !important; font-size: 0.6rem !important; padding: 1px 5px !important; border-radius: 3px !important; border: 1px solid var(--color-border) !important; }
         .leaflet-control-attribution a { color: var(--color-accent) !important; }
-        .map-section-header {
-            display: flex; align-items: center; gap: 0.5rem;
-            font-size: 0.8125rem; font-weight: 600; color: var(--color-text-muted);
-            text-transform: uppercase; letter-spacing: 0.06em;
-            margin-bottom: 0.625rem;
+
+        /* ---- Hero ---- */
+        .hero-gradient {
+            background: radial-gradient(ellipse 80% 60% at 50% 0%, var(--color-accent-soft) 0%, transparent 60%);
         }
-        .map-section-header svg { color: var(--color-accent); }
+        [data-theme="dark"] .hero-gradient {
+            background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(6,182,212,0.08) 0%, transparent 60%),
+                        radial-gradient(ellipse 40% 40% at 80% 80%, rgba(139,92,246,0.05) 0%, transparent 50%);
+        }
+        .shield-glow-pulse {
+            animation: shieldPulse 3s ease-in-out infinite;
+        }
+        @keyframes shieldPulse {
+            0%, 100% { filter: drop-shadow(0 0 8px var(--color-shield-glow)); }
+            50% { filter: drop-shadow(0 0 20px var(--color-shield-glow)); }
+        }
+        .hero-icon-ring {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-accent-soft), var(--color-purple-soft));
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 32px var(--color-shield-glow);
+        }
+
+        /* ---- Glass Stat Cards ---- */
         .stat-card {
             background: var(--color-surface);
             border: 1px solid var(--color-border);
             border-radius: var(--radius-lg);
-            padding: 1.25rem 1.5rem;
-            text-align: center;
-            transition: all 0.25s ease;
+            padding: 1.25rem 1rem 1rem;
+            text-align: center; transition: all 0.3s ease;
+            position: relative; overflow: hidden;
         }
+        .stat-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            transition: height 0.3s ease;
+        }
+        .stat-card-spots::before { background: var(--color-blue); }
+        .stat-card-routes::before { background: var(--color-orange); }
+        .stat-card-areas::before { background: var(--color-purple); }
+        .stat-card:hover { transform: translateY(-2px); }
         [data-theme="dark"] .stat-card:hover {
-            border-color: rgba(6, 182, 212, 0.3);
-            box-shadow: 0 4px 24px rgba(6, 182, 212, 0.08);
-            transform: translateY(-1px);
+            border-color: rgba(6,182,212,0.2);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         }
         [data-theme="light"] .stat-card:hover {
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+        .stat-card:hover::before { height: 3px; }
+        .stat-number {
+            font-size: 2rem; font-weight: 800; line-height: 1.1;
+        }
+        .stat-icon { font-size: 1.25rem; margin-bottom: 0.25rem; }
+
+        /* ---- CTA Button ---- */
+        .btn-cta {
+            display: inline-flex; align-items: center; gap: 0.625rem;
+            padding: 0.875rem 2rem;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-purple));
+            color: #fff; border-radius: var(--radius-md);
+            font-weight: 600; font-size: 0.9375rem;
+            text-decoration: none; transition: all 0.3s ease;
+            box-shadow: 0 2px 16px var(--color-shield-glow);
+        }
+        .btn-cta:hover {
             transform: translateY(-1px);
+            box-shadow: 0 6px 24px var(--color-shield-glow);
         }
-        .btn-map {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.75rem;
-            background: var(--color-accent);
-            color: #ffffff;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            font-size: 0.9375rem;
-            transition: all 0.2s ease;
-            text-decoration: none;
+
+        /* ---- Section ---- */
+        .section-divider {
+            max-width: 1152px; margin: 0 auto; padding: 0 1.5rem; width: 100%;
         }
-        .btn-map:hover {
-            background: var(--color-accent-hover);
-            box-shadow: 0 4px 16px var(--color-shield-glow);
-        }
-        .nav-link {
-            padding: 0.5rem 1rem;
-            border-radius: var(--radius-sm);
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.15s ease;
-            text-decoration: none;
-        }
-        .nav-link-login {
-            color: var(--color-text-secondary);
+        .section-divider hr { border: none; border-top: 1px solid var(--color-border); }
+        .map-frame {
+            background: linear-gradient(180deg, var(--color-surface), var(--color-bg));
             border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: 0.5rem;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
         }
-        .nav-link-login:hover {
-            background: var(--color-surface-hover);
-            color: var(--color-text);
+        [data-theme="dark"] .map-frame { box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+        .map-frame-header {
+            display: flex; align-items: center; gap: 0.375rem;
+            padding: 0.375rem 0.5rem 0.5rem;
+            font-size: 0.6875rem; color: var(--color-text-muted);
+            font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
         }
-        .nav-link-primary {
-            background: var(--color-accent);
-            color: #ffffff;
+        .map-frame-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+        .map-frame-dot.r { background: #ef4444; } .map-frame-dot.y { background: #eab308; } .map-frame-dot.g { background: #22c55e; }
+
+        /* ---- Nav ---- */
+        .nav-link {
+            padding: 0.5rem 1rem; border-radius: var(--radius-sm);
+            font-size: 0.875rem; font-weight: 500; transition: all 0.15s ease; text-decoration: none;
         }
-        .nav-link-primary:hover {
-            background: var(--color-accent-hover);
-        }
+        .nav-link-ghost { color: var(--color-text-secondary); }
+        .nav-link-ghost:hover { background: var(--color-surface-hover); color: var(--color-text); }
+        .nav-link-accent { background: var(--color-accent); color: #fff; }
+        .nav-link-accent:hover { background: var(--color-accent-hover); }
     </style>
 </head>
 <body style="background: var(--color-bg); min-height: 100vh; display: flex; flex-direction: column;">
 
-    {{-- Header / Nav --}}
-    <header style="background: var(--color-header-bg); border-bottom: 1px solid var(--color-header-border); padding: 0.75rem 1.5rem; position: relative; z-index: 10;">
-        <div style="max-width: 1152px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
-            <a href="{{ url('/') }}" style="display: flex; align-items: center; gap: 0.625rem; text-decoration: none;">
-                <svg class="shield-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-shield)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </svg>
-                <span style="font-weight: 700; font-size: 1.125rem; color: var(--color-text); letter-spacing: -0.01em;">wow very bad guy is here</span>
-                <span style="font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.125rem 0.5rem; border-radius: 9999px; background: var(--color-accent-soft); color: var(--color-accent-text);">Keamanan</span>
+    {{-- Header --}}
+    <header style="background: var(--color-header-bg); border-bottom: 1px solid var(--color-header-border); padding: 0.75rem 1.5rem; position: sticky; top:0; z-index:10; backdrop-filter:blur(12px);">
+        <div style="max-width:1152px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;">
+            <a href="{{ url('/') }}" style="display:flex; align-items:center; gap:0.5rem; text-decoration:none;">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--color-shield)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shield-glow-pulse"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span style="font-weight:700; font-size:1rem; color:var(--color-text);">wow very bad guy is here</span>
+                <span style="font-size:0.625rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; padding:0.125rem 0.5rem; border-radius:9999px; background:var(--color-accent-soft); color:var(--color-accent-text);">Keamanan</span>
             </a>
-            <nav style="display: flex; align-items: center; gap: 0.5rem;">
+            <nav style="display:flex; align-items:center; gap:0.5rem;">
                 @if (Route::has('login'))
                     @auth
                         <a href="{{ url('/dashboard') }}" style="display:flex; align-items:center; gap:0.5rem; text-decoration:none; padding:0.25rem 0.5rem; border-radius:var(--radius-sm); transition:background 0.15s;" onmouseover="this.style.background='var(--color-surface-hover)'" onmouseout="this.style.background='transparent'">
                             @include('partials.user-avatar', ['size' => 28])
                             <span style="font-size:0.8125rem; color:var(--color-text); font-weight:500;">{{ Auth::user()->name }}</span>
                         </a>
-                        <a href="{{ url('/map') }}" class="nav-link nav-link-primary">Map</a>
+                        <a href="{{ url('/map') }}" class="nav-link nav-link-accent">Map</a>
                         <form method="POST" action="{{ route('logout') }}" style="display:inline;">
                             @csrf
-                            <button type="submit" class="nav-link nav-link-login" style="cursor:pointer; background:none; font-size:0.75rem;">Log out</button>
+                            <button type="submit" class="nav-link nav-link-ghost" style="cursor:pointer; background:none; border:1px solid var(--color-border); font-size:0.75rem;">Log out</button>
                         </form>
                     @else
-                        <a href="{{ route('login') }}" class="nav-link nav-link-login">Log in</a>
+                        <a href="{{ route('login') }}" class="nav-link nav-link-ghost" style="border:1px solid var(--color-border);">Log in</a>
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="nav-link nav-link-primary">Register</a>
+                            <a href="{{ route('register') }}" class="nav-link nav-link-accent">Register</a>
                         @endif
                     @endauth
                 @endif
@@ -130,69 +150,71 @@
     </header>
 
     {{-- Hero --}}
-    <main style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1rem;">
-        {{-- Shield emblem --}}
-        <div style="margin-bottom: 1.5rem; width: 72px; height: 72px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--color-accent-soft);">
-            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="var(--color-shield)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                <path d="M9 12l2 2 4-4"/>
+    <main class="hero-gradient" style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:3rem 1rem 2rem;">
+        <div class="hero-icon-ring" style="margin-bottom:1.5rem;">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--color-shield)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>
             </svg>
         </div>
 
-        <h1 style="font-size: 2.25rem; font-weight: 800; color: var(--color-text); letter-spacing: -0.02em; margin-bottom: 0.25rem; text-align: center;">
-            Keamanan Geo Dashboard
+        <h1 style="font-size:2.5rem; font-weight:800; color:var(--color-text); letter-spacing:-0.03em; margin-bottom:0.5rem; text-align:center; line-height:1.15;">
+            Keamanan<br><span style="background:linear-gradient(135deg,var(--color-accent),var(--color-purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Geo Dashboard</span>
         </h1>
-        <p style="color: var(--color-text-secondary); font-size: 1rem; margin-bottom: 2rem; text-align: center; max-width: 480px; line-height: 1.6;">
-            Monitor, map, and manage geospatial security features across Lombok with real-time threat visualization.
+        <p style="color:var(--color-text-secondary); font-size:0.9375rem; margin-bottom:2.5rem; text-align:center; max-width:440px; line-height:1.6;">
+            Real-time geospatial security monitoring across Lombok — visualize threats, track incidents, and stay aware.
         </p>
 
-        {{-- Stat Cards --}}
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 2rem; max-width: 540px; width: 100%;">
-            <div class="stat-card">
-                <div style="font-size: 1.75rem; font-weight: 800; color: var(--color-blue);">{{ $pointCount }}</div>
-                <div style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">Spots</div>
+        {{-- Stats --}}
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:0.75rem; margin-bottom:2rem; max-width:480px; width:100%;">
+            <div class="stat-card stat-card-spots">
+                <div class="stat-icon">📍</div>
+                <div class="stat-number" style="color:var(--color-blue);" id="countSpots">{{ $pointCount }}</div>
+                <div style="font-size:0.6875rem; color:var(--color-text-muted); margin-top:0.125rem; text-transform:uppercase; letter-spacing:0.06em; font-weight:600;">Spots</div>
             </div>
-            <div class="stat-card">
-                <div style="font-size: 1.75rem; font-weight: 800; color: var(--color-green);">{{ $polylineCount }}</div>
-                <div style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">Routes</div>
+            <div class="stat-card stat-card-routes">
+                <div class="stat-icon">📈</div>
+                <div class="stat-number" style="color:var(--color-orange);" id="countRoutes">{{ $polylineCount }}</div>
+                <div style="font-size:0.6875rem; color:var(--color-text-muted); margin-top:0.125rem; text-transform:uppercase; letter-spacing:0.06em; font-weight:600;">Routes</div>
             </div>
-            <div class="stat-card">
-                <div style="font-size: 1.75rem; font-weight: 800; color: var(--color-purple);">{{ $polygonCount }}</div>
-                <div style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">Areas</div>
+            <div class="stat-card stat-card-areas">
+                <div class="stat-icon">🔷</div>
+                <div class="stat-number" style="color:var(--color-purple);" id="countAreas">{{ $polygonCount }}</div>
+                <div style="font-size:0.6875rem; color:var(--color-text-muted); margin-top:0.125rem; text-transform:uppercase; letter-spacing:0.06em; font-weight:600;">Areas</div>
             </div>
         </div>
 
-        {{-- CTA --}}
-        <a href="{{ url('/map') }}" class="btn-map">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+        <a href="{{ url('/map') }}" class="btn-cta">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
             </svg>
             Open Security Map
         </a>
     </main>
 
     {{-- Map Preview --}}
-    <section style="max-width: 1152px; margin: 0 auto 2.5rem; padding: 0 1.5rem; width: 100%;">
-        <div class="map-section-header">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 00-8 8c0 5.4 8 12 8 12s8-6.6 8-12a8 8 0 00-8-8z"/></svg>
-            Live Map Preview — Lombok
+    <section style="max-width:1152px; margin:0 auto 2.5rem; padding:0 1.5rem; width:100%;">
+        <div class="map-frame">
+            <div class="map-frame-header">
+                <span class="map-frame-dot r"></span><span class="map-frame-dot y"></span><span class="map-frame-dot g"></span>
+                <span style="margin-left:0.5rem;">Live Preview — Lombok</span>
+            </div>
+            <div id="preview-map"></div>
         </div>
-        <div id="preview-map"></div>
     </section>
 
     {{-- Footer --}}
-    <footer style="text-align: center; padding: 1.5rem; color: var(--color-text-muted); font-size: 0.75rem;">
-        <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <footer style="text-align:center; padding:1.5rem; color:var(--color-text-muted); font-size:0.6875rem; border-top:1px solid var(--color-border);">
+        <div style="display:flex; align-items:center; justify-content:center; gap:0.5rem; margin-bottom:0.375rem;">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             <span>&copy; {{ date('Y') }} wow very bad guy is here</span>
             @include('partials.version')
         </div>
-        <div style="margin-top: 0.75rem; max-width: 36rem; margin-left: auto; margin-right: auto; font-size: 0.65rem; line-height: 1.5; position: relative; height: 2.5rem;">
-            <p class="legal-fade" style="position: absolute; inset: 0; animation-delay: 0s;">
-                This project is open source and created for campus/academic purposes only. Unauthorized reproduction, distribution, or submission of this work as your own constitutes plagiarism and may result in academic disciplinary action and/or legal proceedings under applicable intellectual property laws.<br><strong>I am not responsible for your data.</strong>
+        <div style="max-width:36rem; margin:0.5rem auto 0; font-size:0.6rem; line-height:1.5; position:relative; height:2rem;">
+            <p class="legal-fade" style="position:absolute; inset:0; animation-delay:0s;">
+                This project is open source for academic purposes only. I am not responsible for your data.
             </p>
-            <p class="legal-fade" style="position: absolute; inset: 0; animation-delay: 5s;">
-                Proyek ini bersifat open source dan dibuat untuk keperluan kampus/akademik saja. Reproduksi, distribusi, atau penyerahan karya ini sebagai milik sendiri tanpa izin merupakan plagiarisme dan dapat mengakibatkan tindakan disiplin akademik dan/atau proses hukum berdasarkan undang-undang kekayaan intelektual yang berlaku.<br><strong>Saya tidak bertanggung jawab atas data Anda.</strong>
+            <p class="legal-fade" style="position:absolute; inset:0; animation-delay:4s;">
+                Proyek ini open source untuk keperluan akademik. Saya tidak bertanggung jawab atas data Anda.
             </p>
         </div>
     </footer>

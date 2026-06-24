@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>wow very bad guy is here</title>
+    <title>MaiGuard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     @include('partials.theme')
     <style>
@@ -186,6 +186,18 @@
                     </label>
                 </label>
                 <p style="font-size:0.6875rem;color:var(--color-text-muted);margin-top:0.25rem;">Display beach markers as a overlay on the map.</p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" style="display:flex;align-items:center;justify-content:space-between;">
+                    <span>Demo Mode</span>
+                    <label class="toggle-switch">
+                        <input type="hidden" name="demo_mode" value="0">
+                        <input type="checkbox" name="demo_mode" value="1" {{ ($settings['demo_mode'] ?? false) ? 'checked' : '' }}>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </label>
+                <p style="font-size:0.6875rem;color:var(--color-text-muted);margin-top:0.25rem;">Show demo data — 60+ spots, 12 patrol routes, and 8 crime zones across Lombok.</p>
             </div>
 
             <button type="submit" class="btn-save">Save Settings</button>

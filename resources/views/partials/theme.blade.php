@@ -84,19 +84,19 @@
 
     /* ---- Dark Theme (Keamanan / Security) ---- */
     [data-theme="dark"] {
-        --color-bg: #0b1120;
-        --color-bg-secondary: #111827;
-        --color-surface: #1a2436;
-        --color-surface-hover: #1f2d42;
-        --color-border: #263148;
-        --color-border-light: #1e293b;
-        --color-text: #e2e8f0;
-        --color-text-secondary: #94a3b8;
-        --color-text-muted: #64748b;
-        --color-accent: #06b6d4;
-        --color-accent-hover: #22d3ee;
-        --color-accent-soft: rgba(6, 182, 212, 0.12);
-        --color-accent-text: #22d3ee;
+        --color-bg: #0f0a0a;
+        --color-bg-secondary: #1a1010;
+        --color-surface: #1e1414;
+        --color-surface-hover: #281a1a;
+        --color-border: #362222;
+        --color-border-light: #281a1a;
+        --color-text: #e8e0e0;
+        --color-text-secondary: #a89898;
+        --color-text-muted: #786868;
+        --color-accent: #e11d48;
+        --color-accent-hover: #f43f5e;
+        --color-accent-soft: rgba(225, 29, 72, 0.12);
+        --color-accent-text: #f43f5e;
         --color-success: #10b981;
         --color-success-soft: rgba(16, 185, 129, 0.12);
         --color-warning: #f59e0b;
@@ -112,29 +112,29 @@
         --color-orange: #fb923c;
         --color-orange-soft: rgba(251, 146, 60, 0.12);
 
-        --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.3);
-        --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4), 0 2px 4px -2px rgba(0,0,0,0.3);
-        --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.5), 0 4px 6px -4px rgba(0,0,0,0.4);
+        --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.4);
+        --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.5), 0 2px 4px -2px rgba(0,0,0,0.4);
+        --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.6), 0 4px 6px -4px rgba(0,0,0,0.5);
 
-        --color-header-bg: #151d2e;
-        --color-header-border: #263148;
-        --color-header-text: #e2e8f0;
+        --color-header-bg: #140d0d;
+        --color-header-border: #362222;
+        --color-header-text: #e8e0e0;
 
-        --color-table-header-bg: #151d2e;
-        --color-table-row-hover: #1a2436;
-        --color-table-stripe: #111827;
+        --color-table-header-bg: #140d0d;
+        --color-table-row-hover: #1e1414;
+        --color-table-stripe: #1a1010;
 
-        --color-input-bg: #0f172a;
-        --color-input-border: #334155;
-        --color-input-text: #e2e8f0;
-        --color-input-placeholder: #475569;
-        --color-input-focus-ring: #06b6d4;
+        --color-input-bg: #1a1010;
+        --color-input-border: #4a3030;
+        --color-input-text: #e8e0e0;
+        --color-input-placeholder: #685858;
+        --color-input-focus-ring: #e11d48;
 
-        --color-modal-overlay: rgba(0,0,0,0.7);
-        --color-modal-bg: #1a2436;
+        --color-modal-overlay: rgba(0,0,0,0.75);
+        --color-modal-bg: #1e1414;
 
-        --color-shield: #06b6d4;
-        --color-shield-glow: rgba(6, 182, 212, 0.2);
+        --color-shield: #e11d48;
+        --color-shield-glow: rgba(225, 29, 72, 0.2);
     }
 
     /* ---- Global Base Styles ---- */
@@ -147,17 +147,17 @@
     /* ---- Security Header Glow Effect (Dark only) ---- */
     [data-theme="dark"] .security-header {
         border-bottom: 1px solid var(--color-border);
-        box-shadow: 0 1px 8px rgba(6, 182, 212, 0.08);
+        box-shadow: 0 1px 8px rgba(225, 29, 72, 0.08);
     }
 
     [data-theme="dark"] .surface-card {
         border: 1px solid var(--color-border);
-        box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 12px rgba(0,0,0,0.4);
     }
 
     [data-theme="dark"] .surface-card:hover {
-        border-color: rgba(6, 182, 212, 0.25);
-        box-shadow: 0 4px 20px rgba(6, 182, 212, 0.08);
+        border-color: rgba(225, 29, 72, 0.25);
+        box-shadow: 0 4px 20px rgba(225, 29, 72, 0.08);
     }
 
     /* ---- Security shield pulse ---- */

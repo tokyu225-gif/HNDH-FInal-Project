@@ -39,7 +39,9 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update the user's avatar.
+     * Upload atau hapus foto profil.
+     * Jika ada _remove_avatar, hapus foto yang ada.
+     * Jika ada file avatar, crop & compress di frontend (Cropper.js), simpan ke storage.
      */
     public function updateAvatar(Request $request): RedirectResponse
     {

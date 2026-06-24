@@ -10,15 +10,30 @@ use Illuminate\Support\Facades\Storage;
 
 class GeoFeatureController extends Controller
 {
+    /**
+     * Ambil semua fitur geo (titik, rute, zona).
+     * Jika demo mode OFF, sembunyikan data dari user demo@maiguard.id
+     */
     public function index()
     {
+        $settings = (new SettingsController)->load();
+        $demoUid = \App\Models\User::where('email', 'demo@maiguard.id')->value('id');
+
+        $points = GeoPoint::with('user')->when(!($settings['demo_mode'] ?? false) && $demoUid, fn($q) => $q->where('user_id', '!=', $demoUid))->get();
+        $polylines = GeoPolyline::with('user')->when(!($settings['demo_mode'] ?? false) && $demoUid, fn($q) => $q->where('user_id', '!=', $demoUid))->get();
+        $polygons = GeoPolygon::with('user')->when(!($settings['demo_mode'] ?? false) && $demoUid, fn($q) => $q->where('user_id', '!=', $demoUid))->get();
+
         return response()->json([
-            'points' => GeoPoint::with('user')->get(),
-            'polylines' => GeoPolyline::with('user')->get(),
-            'polygons' => GeoPolygon::with('user')->get(),
+            'points' => $points,
+            'polylines' => $polylines,
+            'polygons' => $polygons,
         ]);
     }
 
+    /**
+     * Simpan fitur baru (titik/rute/zona) yang digambar user di peta.
+     * Menerima geometry_type dan geometry_data dari Leaflet.draw.
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -68,6 +83,9 @@ class GeoFeatureController extends Controller
         return response()->json($feature, 201);
     }
 
+    /**
+     * Update posisi dan data titik (drag marker di peta).
+     */
     public function updatePoint(Request $request, GeoPoint $point)
     {
         $validated = $request->validate([
@@ -89,6 +107,9 @@ class GeoFeatureController extends Controller
         return response()->json($point);
     }
 
+    /**
+     * Update koordinat rute (edit vertex di peta).
+     */
     public function updatePolyline(Request $request, GeoPolyline $polyline)
     {
         $validated = $request->validate([

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>wow very bad guy is here</title>
+    <title>MaiGuard</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     @include('partials.theme')
@@ -21,8 +21,8 @@
             background: radial-gradient(ellipse 80% 60% at 50% 0%, var(--color-accent-soft) 0%, transparent 60%);
         }
         [data-theme="dark"] .hero-gradient {
-            background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(6,182,212,0.08) 0%, transparent 60%),
-                        radial-gradient(ellipse 40% 40% at 80% 80%, rgba(139,92,246,0.05) 0%, transparent 50%);
+            background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(225,29,72,0.06) 0%, transparent 60%),
+                        radial-gradient(ellipse 40% 40% at 80% 80%, rgba(225,29,72,0.03) 0%, transparent 50%);
         }
         .shield-glow-pulse {
             animation: shieldPulse 3s ease-in-out infinite;
@@ -56,8 +56,8 @@
         .stat-card-areas::before { background: var(--color-purple); }
         .stat-card:hover { transform: translateY(-2px); }
         [data-theme="dark"] .stat-card:hover {
-            border-color: rgba(6,182,212,0.2);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            border-color: rgba(225,29,72,0.15);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
         }
         [data-theme="light"] .stat-card:hover {
             box-shadow: 0 8px 24px rgba(0,0,0,0.08);
@@ -123,7 +123,7 @@
         <div style="max-width:1152px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;">
             <a href="{{ url('/') }}" style="display:flex; align-items:center; gap:0.5rem; text-decoration:none;">
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--color-shield)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shield-glow-pulse"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                <span style="font-weight:700; font-size:1rem; color:var(--color-text);">wow very bad guy is here</span>
+                <span style="font-weight:700; font-size:1rem; color:var(--color-text);">MaiGuard</span>
                 <span style="font-size:0.625rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; padding:0.125rem 0.5rem; border-radius:9999px; background:var(--color-accent-soft); color:var(--color-accent-text);">Keamanan</span>
             </a>
             <nav style="display:flex; align-items:center; gap:0.5rem;">
@@ -150,7 +150,10 @@
     </header>
 
     {{-- Hero --}}
-    <main class="hero-gradient" style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:3rem 1rem 2rem;">
+    <main class="hero-gradient" style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:3rem 1rem 2rem; background-image:url('/images/hero-bg.jpg'); background-size:cover; background-position:center; background-repeat:no-repeat; position:relative;">
+        {{-- Dark overlay --}}
+        <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(15,10,10,0.85) 0%, rgba(15,10,10,0.7) 50%, rgba(15,10,10,0.9) 100%);"></div>
+        <div style="position:relative; z-index:1; display:flex; flex-direction:column; align-items:center;">
         <div class="hero-icon-ring" style="margin-bottom:1.5rem;">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--color-shield)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>
@@ -158,26 +161,26 @@
         </div>
 
         <h1 style="font-size:2.5rem; font-weight:800; color:var(--color-text); letter-spacing:-0.03em; margin-bottom:0.5rem; text-align:center; line-height:1.15;">
-            Keamanan<br><span style="background:linear-gradient(135deg,var(--color-accent),var(--color-purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Geo Dashboard</span>
+            Aktivitas Kriminal<br><span style="background:linear-gradient(135deg,var(--color-accent),var(--color-purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">& Mencurigakan</span>
         </h1>
         <p style="color:var(--color-text-secondary); font-size:0.9375rem; margin-bottom:2.5rem; text-align:center; max-width:440px; line-height:1.6;">
-            Real-time geospatial security monitoring across Lombok — visualize threats, track incidents, and stay aware.
+            Pemantauan keamanan geospasial di Lombok Nusra — visualisasikan ancaman, lacak insiden, tetap waspada.
         </p>
 
         {{-- Stats --}}
         <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:0.75rem; margin-bottom:2rem; max-width:480px; width:100%;">
             <div class="stat-card stat-card-spots">
-                <div class="stat-icon">📍</div>
+                <div class="stat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
                 <div class="stat-number" style="color:var(--color-blue);" id="countSpots">{{ $pointCount }}</div>
                 <div style="font-size:0.6875rem; color:var(--color-text-muted); margin-top:0.125rem; text-transform:uppercase; letter-spacing:0.06em; font-weight:600;">Spots</div>
             </div>
             <div class="stat-card stat-card-routes">
-                <div class="stat-icon">📈</div>
+                <div class="stat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 2 15 10 8 6 2 14"/></svg></div>
                 <div class="stat-number" style="color:var(--color-orange);" id="countRoutes">{{ $polylineCount }}</div>
                 <div style="font-size:0.6875rem; color:var(--color-text-muted); margin-top:0.125rem; text-transform:uppercase; letter-spacing:0.06em; font-weight:600;">Routes</div>
             </div>
             <div class="stat-card stat-card-areas">
-                <div class="stat-icon">🔷</div>
+                <div class="stat-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
                 <div class="stat-number" style="color:var(--color-purple);" id="countAreas">{{ $polygonCount }}</div>
                 <div style="font-size:0.6875rem; color:var(--color-text-muted); margin-top:0.125rem; text-transform:uppercase; letter-spacing:0.06em; font-weight:600;">Areas</div>
             </div>
@@ -189,6 +192,7 @@
             </svg>
             Open Security Map
         </a>
+        </div>
     </main>
 
     {{-- Map Preview --}}
@@ -206,7 +210,7 @@
     <footer style="text-align:center; padding:1.5rem; color:var(--color-text-muted); font-size:0.6875rem; border-top:1px solid var(--color-border);">
         <div style="display:flex; align-items:center; justify-content:center; gap:0.5rem; margin-bottom:0.375rem;">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <span>&copy; {{ date('Y') }} wow very bad guy is here</span>
+            <span>&copy; {{ date('Y') }} MaiGuard</span>
             @include('partials.version')
         </div>
         <div style="max-width:36rem; margin:0.5rem auto 0; font-size:0.6rem; line-height:1.5; position:relative; height:2rem;">
@@ -251,13 +255,15 @@
                     });
                     (data.polylines || []).forEach(p => {
                         const c = crimeColor(p.crime_type);
-                        L.polyline(p.coordinates.map(c => [c.lat, c.lng]), { color: c, weight: 3, opacity: 0.85 })
+                        const coords = typeof p.coordinates === 'string' ? JSON.parse(p.coordinates) : p.coordinates;
+                        L.polyline(coords.map(c => [c.lat, c.lng]), { color: c, weight: 3, opacity: 0.85 })
                             .bindPopup(`<b>${p.name || 'Route'}</b>${p.crime_type ? `<br><span style="font-size:11px;">● ${p.crime_type}</span>` : ''}`)
                             .addTo(map);
                     });
                     (data.polygons || []).forEach(p => {
                         const c = crimeColor(p.crime_type);
-                        L.polygon(p.coordinates.map(c => [c.lat, c.lng]), { color: c, fillColor: c, fillOpacity: 0.15, weight: 2 })
+                        const coords = typeof p.coordinates === 'string' ? JSON.parse(p.coordinates) : p.coordinates;
+                        L.polygon(coords.map(c => [c.lat, c.lng]), { color: c, fillColor: c, fillOpacity: 0.15, weight: 2 })
                             .bindPopup(`<b>${p.name || 'Area'}</b>${p.crime_type ? `<br><span style="font-size:11px;">● ${p.crime_type}</span>` : ''}`)
                             .addTo(map);
                     });

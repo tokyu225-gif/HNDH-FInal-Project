@@ -10,7 +10,7 @@
                             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                             <path d="M9 12l2 2 4-4"/>
                         </svg>
-                        <span class="font-bold text-[var(--color-text)] dark:text-[var(--color-text)]">wow very bad guy is here</span>
+                        <span class="font-bold text-[var(--color-text)] dark:text-[var(--color-text)]">MaiGuard</span>
                         <span class="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-[var(--color-accent-soft)] dark:bg-[var(--color-accent-soft)] text-[var(--color-accent-text)] dark:text-[var(--color-accent-text)]">Keamanan</span>
                     </a>
                 </div>

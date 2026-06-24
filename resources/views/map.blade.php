@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>wow very bad guy is here</title>
+    <title>MaiGuard</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -46,7 +46,7 @@
             border-bottom: 1px solid var(--color-header-border);
             padding: 0.5rem 1rem; display: flex; align-items: center; justify-content: space-between;
         }
-        [data-theme="dark"] .map-toolbar { box-shadow: 0 1px 8px rgba(6,182,212,0.08); }
+        [data-theme="dark"] .map-toolbar { box-shadow: 0 1px 8px rgba(225,29,72,0.06); }
         [data-theme="light"] .map-toolbar { box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
         .toolbar-divider { width: 1px; height: 20px; background: var(--color-border); margin: 0 0.125rem; }
         .status-text { color: var(--color-text-muted); font-size: 0.75rem; }
@@ -80,7 +80,7 @@
         #deleteLayersBtn:hover { box-shadow: 0 0 12px rgba(239,68,68,0.5), 0 0 4px rgba(239,68,68,0.3); }
         #routeBtn:hover { box-shadow: 0 0 12px rgba(245,158,11,0.5), 0 0 4px rgba(245,158,11,0.3); }
         #heatmapBtn:hover { box-shadow: 0 0 12px rgba(239,68,68,0.5), 0 0 4px rgba(239,68,68,0.3); }
-        .draw-active { color: var(--color-accent) !important; background: var(--color-accent-soft) !important; box-shadow: 0 0 14px rgba(6,182,212,0.6),0 0 6px rgba(6,182,212,0.3) !important; }
+        .draw-active { color: var(--color-accent) !important; background: var(--color-accent-soft) !important; box-shadow: 0 0 14px rgba(225,29,72,0.5),0 0 6px rgba(225,29,72,0.25) !important; }
         .draw-panel {
             position: absolute; top: 9rem; left: 12px; z-index: 1000;
             background: var(--color-surface); border: 1px solid var(--color-border);
@@ -145,7 +145,7 @@
 
         /* ---- Bottom Bar ---- */
         #bottomBar { box-shadow: 0 -1px 6px rgba(0,0,0,0.08); }
-        [data-theme="dark"] #bottomBar { box-shadow: 0 -1px 8px rgba(6,182,212,0.06); }
+        [data-theme="dark"] #bottomBar { box-shadow: 0 -1px 8px rgba(225,29,72,0.05); }
         .legend-dot {
             color: var(--color-text-muted); padding: 1px 4px; border-radius: 3px;
             cursor: pointer; transition: all 0.15s ease;
@@ -176,7 +176,7 @@
             {{-- Home / Site Name --}}
             <a href="{{ url('/') }}" class="icon-btn icon-btn-accent" style="text-decoration:none; width:auto; padding:0 0.625rem; gap:0.375rem; font-weight:700; font-size:0.8125rem; color:var(--color-text);">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                <span>wow very bad guy is here</span>
+                <span>MaiGuard</span>
             </a>
             <span id="statusMsg" class="status-text" style="margin-left:0.25rem;"></span>
         </div>
@@ -196,6 +196,10 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="5" r="2"/><circle cx="19" cy="19" r="2"/><path d="M5 7v5a3 3 0 003 3h8a3 3 0 013 3v1"/></svg>
             </button>
             @endauth
+            {{-- Basemap toggle --}}
+            <button id="basemapBtn" onclick="toggleBasemap()" class="icon-btn" title="Switch basemap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            </button>
             {{-- Heatmap (public) --}}
             <button id="heatmapBtn" onclick="toggleHeatmap()" class="icon-btn icon-btn-heat">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c-4 4-8 7-8 12a8 8 0 0016 0c0-5-4-8-8-12z"/><path d="M12 6v6"/><circle cx="12" cy="16" r="1" fill="currentColor" stroke="none"/></svg>
@@ -326,20 +330,49 @@
     <script src="https://cdn.jsdelivr.net/npm/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
     <script>
         const isAuthenticated = @json(auth()->check());
+
+        // ======================== INISIALISASI PETA ========================
         const map = L.map('map').setView([-8.5333, 116.5333], 11);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        // Basemap: OpenStreetMap (default) dan Esri Satellite
+        const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
             maxZoom: 19
         }).addTo(map);
 
-        // Show mouse coordinates in real-time
+        const esriLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: '&copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+            maxZoom: 19
+        });
+
+        let basemapSatellite = false;
+        function toggleBasemap() {
+            basemapSatellite = !basemapSatellite;
+            const btn = document.getElementById('basemapBtn');
+            if (basemapSatellite) {
+                map.removeLayer(osmLayer);
+                map.addLayer(esriLayer);
+                btn.style.color = 'var(--color-accent)';
+                btn.style.background = 'var(--color-accent-soft)';
+                btn.title = 'Switch to Street Map';
+            } else {
+                map.removeLayer(esriLayer);
+                map.addLayer(osmLayer);
+                btn.style.color = 'var(--color-text-secondary)';
+                btn.style.background = 'transparent';
+                btn.title = 'Switch to Satellite';
+            }
+        }
+
+        // ======================== KOORDINAT MOUSE ========================
+        // Tampilkan koordinat real-time saat mouse bergerak di atas peta
         map.on('mousemove', function(e) {
             document.getElementById('coords').textContent =
                 `Lat: ${e.latlng.lat.toFixed(5)} | Lng: ${e.latlng.lng.toFixed(5)}`;
         });
 
-        // ---- Drawing layer ----
+        // ======================== LAYER GAMBAR (DRAW) ========================
+        // Layer untuk fitur yang sedang digambar (belum disimpan)
         const drawnItems = new L.FeatureGroup();
         map.addLayer(drawnItems);
 
@@ -357,18 +390,20 @@
                 edit: true,
             }
         });
-        // Add to map so toolbars are fully initialized (hide default UI)
+        // Sembunyikan toolbar default Leaflet.draw, kita pakai custom UI
         map.addControl(drawControl);
         drawControl._container.style.display = 'none';
 
-        // ---- Custom draw buttons in top bar ----
-        let activeDraw = null; // currently active draw handler
+        // ---- Tombol Gambar Custom di Draw Panel ----
+        let activeDraw = null; // handler gambar yang sedang aktif
 
+        // Batalkan mode gambar yang sedang aktif
         function cancelActiveDraw() {
             if (activeDraw) { activeDraw.disable(); activeDraw = null; }
             document.querySelectorAll('#drawMarkerBtn, #drawPolylineBtn, #drawPolygonBtn').forEach(b => b.classList.remove('draw-active'));
         }
 
+        // Mulai mode gambar (Marker, Polyline, atau Polygon)
         function startDraw(type) {
             cancelActiveDraw();
             const opts = drawControl.options.draw;
@@ -405,6 +440,7 @@
             drawControl._toolbars.edit._modes.remove.handler.enable();
         });
 
+        // Event listener: saat user selesai menggambar, buka modal simpan
         map.on(L.Draw.Event.CREATED, function(e) {
             drawnItems.addLayer(e.layer);
             setCurrentGeometry(e.layer);
@@ -480,9 +516,11 @@
             if (f.type === 'Point') {
                 layer = L.marker([f.data.latitude, f.data.longitude], { draggable: true });
             } else if (f.type === 'Polyline') {
-                layer = L.polyline(f.data.coordinates.map(c => [c.lat, c.lng]), { color: '#3388ff' });
+                const coords = typeof f.data.coordinates === 'string' ? JSON.parse(f.data.coordinates) : f.data.coordinates;
+                layer = L.polyline(coords.map(c => [c.lat, c.lng]), { color: '#3388ff' });
             } else if (f.type === 'Polygon') {
-                layer = L.polygon(f.data.coordinates.map(c => [c.lat, c.lng]), { color: '#3388ff' });
+                const coords = typeof f.data.coordinates === 'string' ? JSON.parse(f.data.coordinates) : f.data.coordinates;
+                layer = L.polygon(coords.map(c => [c.lat, c.lng]), { color: '#3388ff' });
             }
             if (layer) {
                 layer.addTo(map);
@@ -498,7 +536,8 @@
         })();
         @endif
 
-        // ---- Crime type color map (matches legend) ----
+        // ======================== WARNA BERDASARKAN JENIS KRIMINAL ========================
+        // Peta warna sesuai legend di bottom bar
         const crimeColors = {
             'Theft': '#ef4444', 'Assault': '#f97316', 'Vandalism': '#eab308',
             'Burglary': '#a855f7', 'Robbery': '#ec4899', 'Suspicious Activity': '#3b82f6',
@@ -507,6 +546,8 @@
         };
         function getCrimeColor(crimeType) { return crimeColors[crimeType] || '#6b7280'; }
 
+        // ======================== LOAD FITUR DARI SERVER ========================
+        // Ambil semua titik, rute, dan zona dari API dan tampilkan di peta
         function loadGeoFeatures() {
             fetch('/api/geo-features')
                 .then(res => res.json())
@@ -526,7 +567,8 @@
                     });
                     // Polylines
                     (data.polylines || []).forEach(p => {
-                        const latlngs = p.coordinates.map(c => [c.lat, c.lng]);
+                        const coords = typeof p.coordinates === 'string' ? JSON.parse(p.coordinates) : p.coordinates;
+                        const latlngs = coords.map(c => [c.lat, c.lng]);
                         const color = getCrimeColor(p.crime_type);
                         const layer = L.polyline(latlngs, { color, weight: 4, opacity: 0.85 });
                         addFeaturePopup(layer, 'Polyline', p);
@@ -535,7 +577,8 @@
                     });
                     // Polygons
                     (data.polygons || []).forEach(p => {
-                        const latlngs = p.coordinates.map(c => [c.lat, c.lng]);
+                        const coords = typeof p.coordinates === 'string' ? JSON.parse(p.coordinates) : p.coordinates;
+                        const latlngs = coords.map(c => [c.lat, c.lng]);
                         const color = getCrimeColor(p.crime_type);
                         const layer = L.polygon(latlngs, { color, fillColor: color, fillOpacity: 0.2, weight: 2 });
                         addFeaturePopup(layer, 'Polygon', p);
@@ -547,6 +590,8 @@
                 });
         }
 
+        // ======================== UPDATE FEED TERBARU ========================
+        // Tampilkan fitur paling baru di bottom bar
         function updateFeatureFeed(data) {
             const allFeatures = [
                 ...(data.points || []).map(p => ({ ...p, _type: 'Point' })),
@@ -568,6 +613,8 @@
             }
         }
 
+        // ======================== POPUP UNTUK SETIAP FITUR ========================
+        // Tambahkan popup informasi saat fitur diklik
         function addFeaturePopup(layer, type, f) {
             const escapedDesc = f.description ? f.description.replace(/'/g, "\\'").replace(/\n/g, '<br>') : '';
             let popupHtml = `<div class="geo-popup">`;
@@ -775,6 +822,8 @@
         loadGeoFeatures();
         @endif
 
+        // ======================== DELETE FITUR ========================
+        // Konfirmasi dua-klik: pertama "Sure?", kedua hapus
         let deleteConfirmTimer = null;
 
         function confirmDelete(e, type, id) {
@@ -801,6 +850,7 @@
             }, 3000);
         }
 
+        // Kirim request DELETE ke server dan hapus dari peta
         function deleteFeature(type, id) {
             const endpoint = type === 'Point' ? `/api/points/${id}`
                            : type === 'Polyline' ? `/api/polylines/${id}`
@@ -829,7 +879,8 @@
                 });
         }
 
-        // ---- Toast ----
+        // ======================== TOAST NOTIFIKASI ========================
+        // Tampilkan toast di bagian bawah (success/error/info)
         let toastTimer;
         function showToast(msg, type = 'success') {
             const el = document.getElementById('toast');
@@ -841,7 +892,8 @@
             toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
         }
 
-        // ---- Save Modal ----
+        // ======================== MODAL SIMPAN / EDIT ========================
+        // Buka modal untuk menyimpan fitur yang baru digambar
         function openSaveModal() {
             if (!currentGeometry) {
                 showToast('Draw something on the map first', 'info');
@@ -860,6 +912,7 @@
             document.getElementById('saveModal').classList.remove('hidden');
         }
 
+        // Tutup modal dan hapus fitur yang belum disimpan dari peta
         function closeSaveModal() {
             document.getElementById('saveModal').classList.add('hidden');
             document.getElementById('saveForm').reset();
@@ -943,7 +996,8 @@
             });
         });
 
-        // ---- Routing (A to B) ----
+        // ======================== ROUTING (OSRM) ========================
+        // Mode routing: klik titik A, klik titik B, gambar rute via OSRM
         let routingMode = false;
         let routePointA = null;
         let routePointB = null;
@@ -995,6 +1049,7 @@
             }
         });
 
+        // Ambil rute dari OSRM API (OpenStreetMap Routing Machine)
         function fetchRoute() {
             const url = `https://router.project-osrm.org/route/v1/driving/${routePointA.lng},${routePointA.lat};${routePointB.lng},${routePointB.lat}?overview=full&geometries=geojson`;
             fetch(url)
@@ -1029,11 +1084,13 @@
             document.getElementById('statusMsg').textContent = '';
         }
 
-        // ---- Heatmap ----
+        // ======================== HEATMAP ========================
+        // Heatmap menggunakan Kernel Density Estimation (KDE)
         let heatmapLayer = null;
         let heatmapOn = false;
         let heatmapRawData = [];
 
+        // Sesuaikan radius heatmap berdasarkan level zoom
         function getHeatRadius() {
             const z = map.getZoom();
             // Scale radius so it represents ~200m at all zoom levels
@@ -1043,11 +1100,14 @@
 
         function updateHeatmapAppearance() {
             if (!heatmapLayer || !heatmapOn) return;
-            const r = getHeatRadius();
-            heatmapLayer.setOptions({ radius: r, blur: r * 0.8 });
+            // Re-render heatmap saat zoom/move agar tidak ada artifak kotak
+            map.removeLayer(heatmapLayer);
+            heatmapLayer = null;
+            renderHeatmap();
         }
 
-        map.on('zoomend', updateHeatmapAppearance);
+        // Pakai moveend (di-render ulang di renderHeatmap) — hapus listener lama
+        // map.on('zoomend', updateHeatmapAppearance); // diganti moveend di renderHeatmap
 
         function toggleHeatmap() {
             const btn = document.getElementById('heatmapBtn');
@@ -1075,6 +1135,7 @@
             }
         }
 
+        // Render ulang heatmap dengan data yang sudah di-fetch
         function renderHeatmap() {
             if (heatmapLayer) { map.removeLayer(heatmapLayer); }
             const r = getHeatRadius();
@@ -1082,7 +1143,7 @@
                 radius: r,
                 blur: r * 0.8,
                 max: 0.8,
-                minOpacity: 0.3,
+                minOpacity: 0.25,
                 gradient: {
                     0.0: 'blue',
                     0.3: 'cyan',
@@ -1092,6 +1153,10 @@
                     1.0: 'red'
                 }
             }).addTo(map);
+
+            // Perbaiki artifak kotak — re-render saat peta digeser/di-zoom
+            map.off('moveend', updateHeatmapAppearance);
+            map.on('moveend', updateHeatmapAppearance);
         }
 
     </script>

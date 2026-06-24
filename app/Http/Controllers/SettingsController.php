@@ -22,6 +22,7 @@ class SettingsController extends Controller
             'units' => 'nullable|string|in:km,mi',
             'theme' => 'nullable|string|in:light,dark',
             'show_beaches' => 'nullable|boolean',
+            'demo_mode' => 'nullable|boolean',
         ]);
 
         $current = $this->load();
@@ -41,6 +42,7 @@ class SettingsController extends Controller
             'units' => 'km',
             'theme' => 'light',
             'show_beaches' => false,
+            'demo_mode' => false,
         ];
 
         $path = storage_path('app/settings.json');

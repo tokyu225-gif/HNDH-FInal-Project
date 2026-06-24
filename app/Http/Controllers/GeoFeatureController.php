@@ -13,9 +13,9 @@ class GeoFeatureController extends Controller
     public function index()
     {
         return response()->json([
-            'points' => GeoPoint::all(),
-            'polylines' => GeoPolyline::all(),
-            'polygons' => GeoPolygon::all(),
+            'points' => GeoPoint::with('user')->get(),
+            'polylines' => GeoPolyline::with('user')->get(),
+            'polygons' => GeoPolygon::with('user')->get(),
         ]);
     }
 
@@ -24,6 +24,7 @@ class GeoFeatureController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'crime_type' => 'nullable|string|max:100',
             'geometry_type' => 'required|string|in:Point,Polyline,Polygon',
             'geometry_data' => 'required|json',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
@@ -38,21 +39,27 @@ class GeoFeatureController extends Controller
 
         $feature = match ($validated['geometry_type']) {
             'Point' => GeoPoint::create([
+                'user_id' => auth()->id(),
                 'name' => $validated['name'],
                 'description' => $validated['description'] ?? null,
+                'crime_type' => $validated['crime_type'] ?? null,
                 'latitude' => $data['lat'],
                 'longitude' => $data['lng'],
                 'image_path' => $imagePath,
             ]),
             'Polyline' => GeoPolyline::create([
+                'user_id' => auth()->id(),
                 'name' => $validated['name'],
                 'description' => $validated['description'] ?? null,
+                'crime_type' => $validated['crime_type'] ?? null,
                 'coordinates' => $data,
                 'image_path' => $imagePath,
             ]),
             'Polygon' => GeoPolygon::create([
+                'user_id' => auth()->id(),
                 'name' => $validated['name'],
                 'description' => $validated['description'] ?? null,
+                'crime_type' => $validated['crime_type'] ?? null,
                 'coordinates' => $data,
                 'image_path' => $imagePath,
             ]),
@@ -66,6 +73,7 @@ class GeoFeatureController extends Controller
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
+            'crime_type' => 'nullable|string|max:100',
             'latitude' => 'sometimes|numeric',
             'longitude' => 'sometimes|numeric',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
@@ -76,7 +84,7 @@ class GeoFeatureController extends Controller
             $point->image_path = $request->file('image')->store('geo-features', 'public');
         }
 
-        $point->update($request->only(['name', 'description', 'latitude', 'longitude']));
+        $point->update($request->only(['name', 'description', 'crime_type', 'latitude', 'longitude']));
 
         return response()->json($point);
     }
@@ -86,6 +94,7 @@ class GeoFeatureController extends Controller
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
+            'crime_type' => 'nullable|string|max:100',
             'coordinates' => 'sometimes|json',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
@@ -95,7 +104,7 @@ class GeoFeatureController extends Controller
             $polyline->image_path = $request->file('image')->store('geo-features', 'public');
         }
 
-        $data = $request->only(['name', 'description']);
+        $data = $request->only(['name', 'description', 'crime_type']);
         if ($request->has('coordinates')) {
             $data['coordinates'] = json_decode($request->input('coordinates'), true);
         }
@@ -109,6 +118,7 @@ class GeoFeatureController extends Controller
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
+            'crime_type' => 'nullable|string|max:100',
             'coordinates' => 'sometimes|json',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
@@ -118,7 +128,7 @@ class GeoFeatureController extends Controller
             $polygon->image_path = $request->file('image')->store('geo-features', 'public');
         }
 
-        $data = $request->only(['name', 'description']);
+        $data = $request->only(['name', 'description', 'crime_type']);
         if ($request->has('coordinates')) {
             $data['coordinates'] = json_decode($request->input('coordinates'), true);
         }

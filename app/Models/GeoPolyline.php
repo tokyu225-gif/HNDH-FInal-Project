@@ -8,7 +8,9 @@ class GeoPolyline extends Model
 {
     protected $table = 'polylines';
 
-    protected $fillable = ['name', 'description', 'coordinates', 'image_path'];
+    protected $fillable = ['user_id', 'name', 'description', 'crime_type', 'coordinates', 'image_path'];
 
     protected $casts = ['coordinates' => 'array'];
+
+    public function user() { return $this->belongsTo(User::class); }
 }

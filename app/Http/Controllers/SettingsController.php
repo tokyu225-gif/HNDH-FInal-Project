@@ -21,6 +21,7 @@ class SettingsController extends Controller
             'default_zoom' => 'nullable|integer|min:1|max:19',
             'units' => 'nullable|string|in:km,mi',
             'theme' => 'nullable|string|in:light,dark',
+            'show_beaches' => 'nullable|boolean',
         ]);
 
         $current = $this->load();
@@ -39,6 +40,7 @@ class SettingsController extends Controller
             'default_zoom' => 11,
             'units' => 'km',
             'theme' => 'light',
+            'show_beaches' => false,
         ];
 
         $path = storage_path('app/settings.json');
